@@ -5,7 +5,7 @@ import "./App.css";
 import Lottie from "react-lottie";
 import animationData from "./assets/Animation - 1739784311411.json";
 
-function App() {
+function NewPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [result, setResult] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -22,7 +22,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `https://new-folder-5-six.vercel.app/api/category/search?L2_category_id=${searchTerm}`
+        `https://new-folder-5-six.vercel.app/api/category/search-all?L2_category=${searchTerm}`
       );
 
       if (!response.ok) {
@@ -199,4 +199,4 @@ function App() {
   );
 }
 
-export default App;
+export default NewPage;
