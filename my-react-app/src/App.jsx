@@ -16,6 +16,16 @@ function App() {
   const [loading2, setLoading2] = useState(false); // Loading state for second search
   const [error2, setError2] = useState(null); // Error state for second search
 
+  const [searchTerm3, setSearchTerm3] = useState(""); // New search term state for second search
+  const [result3, setResult3] = useState([]); // New result state for second search
+  const [loading3, setLoading3] = useState(false); // Loading state for second search
+  const [error3, setError3] = useState(null); // Error state for second search
+
+  const [searchTerm4, setSearchTerm4] = useState(""); // New search term state for second search
+  const [result4, setResult4] = useState([]); // New result state for second search
+  const [loading4, setLoading4] = useState(false); // Loading state for second search
+  const [error4, setError4] = useState(null); // Error state for second search
+
   const handleSearch = async () => {
     if (!searchTerm.trim()) {
       setError("Please enter a valid L2_category_id");
@@ -43,6 +53,62 @@ function App() {
       setLoading(false);
     }
   };
+  const handleSearch3 = async () => {
+    if (!searchTerm3.trim()) {
+      setError3("Please enter a valid L2_category");
+      return;
+    }
+
+    setLoading3(true);
+    setError3(null);
+
+    try {
+      const response = await fetch(
+        `https://new-folder-5-six.vercel.app/api/category/search-category?l2_category=${searchTerm3}`
+      );
+
+      if (!response.ok) {
+        throw new Error("No matching data found.");
+      }
+
+      const data = await response.json();
+      setResult3(data); // Use the data directly without wrapping in an array
+      console.log(data); // Check the API response
+    } catch (err) {
+      setError3(err.message);
+      setResult3([]);
+    } finally {
+      setLoading3(false);
+    }
+  };
+
+  const handleSearch4 = async () => {
+    if (!searchTerm4.trim()) {
+      setError4("Please enter a valid L2_category_id");
+      return;
+    }
+
+    setLoading4(true);
+    setError4(null);
+
+    try {
+      const response = await fetch(
+        `https://new-folder-5-six.vercel.app/api/category/search-attributes?AttributeID=${searchTerm4}`
+      );
+
+      if (!response.ok) {
+        throw new Error("No matching data found.");
+      }
+
+      const data = await response.json();
+      setResult4([data]); // Convert object to array for Ant Design Table
+    } catch (err) {
+      setError4(err.message);
+      setResult4([]);
+    } finally {
+      setLoading4(false);
+    }
+  };
 
   const handleSearch2 = async () => {
     if (!searchTerm2.trim()) {
@@ -63,6 +129,7 @@ function App() {
       }
 
       const data = await response.json();
+
       setResult2([data]); // Convert object to array for Ant Design Table
     } catch (err) {
       setError2(err.message);
@@ -92,6 +159,51 @@ function App() {
       title: "L2 Category ID",
       dataIndex: "L2_category_id",
       key: "L2_category_id",
+    },
+  ];
+  const columns3 = [
+    {
+      title: "L0 Category",
+      dataIndex: "l0_category",
+      key: "l0_category",
+    },
+    {
+      title: "L1 Category",
+      dataIndex: "l1_category",
+      key: "l1_category",
+    },
+    {
+      title: "L2 Category",
+      dataIndex: "l2_category",
+      key: "l2_category",
+    },
+    {
+      title: "L2 Category ID",
+      dataIndex: "l2_category_id",
+      key: "l2_category_id",
+    },
+  ];
+
+  const columns4 = [
+    {
+      title: "L2",
+      dataIndex: "L2",
+      key: "L2",
+    },
+    {
+      title: "AttributeID",
+      dataIndex: "AttributeID",
+      key: "AttributeID",
+    },
+    {
+      title: "AttributeName",
+      dataIndex: "AttributeName",
+      key: "AttributeName",
+    },
+    {
+      title: "Source",
+      dataIndex: "Source",
+      key: "Source",
     },
   ];
 
@@ -229,7 +341,7 @@ function App() {
       {/* First Search Bar */}
       <div className="w-full max-w-md mb-4">
         <Input.Search
-          placeholder="Enter L2_category_id"
+          placeholder="Enter Pdp and plp"
           enterButton="Search"
           size="large"
           value={searchTerm}
@@ -253,26 +365,51 @@ function App() {
       )}
 
       {/* Second Search Bar */}
+
       <div className="w-full max-w-md mb-4">
         <Input.Search
-          placeholder="Enter L2_category"
+          placeholder="Enter L2_category text"
           enterButton="Search"
           size="large"
-          value={searchTerm2}
-          onChange={(e) => setSearchTerm2(e.target.value)}
-          onSearch={handleSearch2}
+          value={searchTerm3}
+          onChange={(e) => setSearchTerm3(e.target.value)}
+          onSearch={handleSearch3}
         />
       </div>
 
-      {loading2 && <Spin size="large" className="mt-4" />}
-      {error2 && (
-        <Alert message={error2} type="error" showIcon className="mt-4" />
+      {loading3 && <Spin size="large" className="mt-4" />}
+      {error3 && (
+        <Alert message={error3} type="error" showIcon className="mt-4" />
       )}
-      {result2.length > 0 && (
+      {result3.length > 0 && (
         <div className="mt-6 w-full max-w-4xl bg-white p-6 rounded-lg shadow-lg">
           <Table
-            columns={columns2}
-            dataSource={result2}
+            columns={columns3}
+            dataSource={result3}
+            rowKey="L2_category_id"
+          />
+        </div>
+      )}
+      <div className="w-full max-w-md mb-4">
+        <Input.Search
+          placeholder="Search Attribute"
+          enterButton="Search"
+          size="large"
+          value={searchTerm4}
+          onChange={(e) => setSearchTerm4(e.target.value)}
+          onSearch={handleSearch4}
+        />
+      </div>
+
+      {loading4 && <Spin size="large" className="mt-4" />}
+      {error4 && (
+        <Alert message={error4} type="error" showIcon className="mt-4" />
+      )}
+      {result4.length > 0 && (
+        <div className="mt-6 w-full max-w-4xl bg-white p-6 rounded-lg shadow-lg">
+          <Table
+            columns={columns4}
+            dataSource={result4}
             rowKey="L2_category_id"
           />
         </div>
